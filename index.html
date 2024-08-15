@@ -15,8 +15,11 @@
     <div id="main">
         <section id="menu">
             <div id="home"></div>
-        
+            
             <div id="playlists">
+                <div class="minicards" style="margin-bottom: 40px;">
+                    <h1 style="justify-self: center; align-self: center; margin: 40px;">Home</h1>
+                </div>
                 <div class="minicards">
                     <div class="curtidas"> <img src="images/heart.png" alt=""></div>
                     <p>musicas curtidas</p>
@@ -181,13 +184,14 @@
 ]
 
     var novidades = [
-        {name:"Let U Go", album_art:"./images/letugo.jpg"},
+        {name:"Let U Go", album_art:"./images/letugo.jpg", time:"2:13"},
         {name:"Nightmare", album_art:"./images/nightmare.jpg"},
-        {name:"Dean", album_art:"./images/dean.jpg"}
+        {name:"Dean", album_art:"./images/dean.jpg"},
+        {name: "Drama", album_art:"./images/aespa-drama.jpg", time:"3:13"},
 
     ]
     
-    
+        
     
         const container = document.querySelector('.scroll');
 
@@ -222,7 +226,7 @@
 
         if (playlistsContainer) {
         // Clear existing content
-        while (playlistsContainer.childNodes.length > 2) {
+        while (playlistsContainer.childNodes.length > 4) {
         playlistsContainer.removeChild(playlistsContainer.lastChild);
     }
 
@@ -297,7 +301,51 @@
         } else {
             console.error('Cards container element not found');
         }
+
+        function convertRangeToTime(rangeValue, maxRangeValue, totalTimeInSeconds) {
+            const timeInSeconds = (rangeValue / maxRangeValue) * totalTimeInSeconds;
+            const minutes = Math.floor(timeInSeconds / 60);
+            const seconds = Math.floor(timeInSeconds % 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const timeRange = document.getElementById('elapsed');
+            const timeDisplay = document.getElementById('time-display');
+            const maxRangeValue = 1000; // Maximum value of the input range
+            const totalTimeInSeconds = 214; // Example total time in seconds (5 minutes)
+
+            timeRange.addEventListener('input', () => {
+                const rangeValue = timeRange.value;
+                const formattedTime = convertRangeToTime(rangeValue, maxRangeValue, totalTimeInSeconds);
+                timeDisplay.textContent = formattedTime;
+            });
+        });
+
         
+            
+        document.addEventListener('input', ()=>{
+            const range = document.getElementById('volume');//get element by id tem que estar dentro do addEventListener
+            const volumeimg = document.getElementById('volumeimg');
+            const volume = range.value;
+            if (volume == 0){
+                volumeimg.src = "images/mute.png";
+            } else if (volume <= 75 && volume > 25){
+                volumeimg.src = "images/volume-low.png";
+            }else if(volume <= 25 && volume > 0 ){
+                volumeimg.src = "images/volume-lowest.png";
+            } 
+            else {
+                volumeimg.src = "images/volume.png";
+            }
+
+            
+        });
+        
+        
+        
+
+
 
     </script>
 
@@ -324,10 +372,16 @@
                 <input type="checkbox" src="images/repeat.png" alt="" class="repeat">
                 
             </div>
-            <input type="range" name="elapsed" id="elapsed" class="slider" min="0" max="6000">
+            <div class="time-container" style="display: flex; justify-content: space-between;">
+                <div class="beforetime">
+                    <p id="time-display" >0:00</p>
+                </div>
+                <input type="range" name="elapsed" id="elapsed" class="slider" min="0" max="1000" value="300">
+                <p style="margin-left: 10px;">3:34</p>
+            </div>
         </div>
         <div style="align-self: center; display: flex; justify-content: space-between;">
-            <img src="images/volume.png" alt="" class="button">
+            <img src="images/volume.png" id="volumeimg" alt="" class="button">
             <div style="margin: 0px 1vw;">
                 <input type="range" name="volume" id="volume" class="volume slider" min="0" max="100">
             </div>
